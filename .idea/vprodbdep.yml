@@ -1,41 +1,57 @@
+#apiVersion and kind: These specify the Kubernetes API version and the kind of object being created. In this case, it's a Deployment object.
 apiVersion: apps/v1
 kind: Deployment
+#metadata: This section contains metadata about the deployment, including the deployment name and labels.
 metadata:
   name: vprodb
   labels:
     app: vprodb
+#spec: This section specifies the desired state of the deployment, including the number of replicas, the pod template, and the selector.
 spec:
+#selector: This specifies the selector that the deployment will use to match pods.
   selector:
     matchLabels:
       app: vprodb
+#replicas: This specifies the desired number of replicas for the deployment.
   replicas: 1
+#template: This specifies the pod template for the deployment.
   template:
+#metadata: This contains metadata about the pod template, including labels.
     metadata:
       labels:
         app: vprodb
+#spec: This specifies the pod's specification, including containers, node selector, and volumes.
     spec:
+#containers: This specifies the containers to be run in the pod, including the name, image, and command-line arguments.
       containers:
       - name: vprodb
         image: vprofile/vprofiledb:V1
         args:
          - "--ignore-db-dir=lost+found"
+#volumeMounts: This specifies the volumes that should be mounted in the container, including the mount path and the name of the volume.
         volumeMounts:
         - mountPath: /var/lib/mysql
           name: vpro-db-data
+#ports: This specifies the ports that should be exposed by the container.
         ports:
         - name: vprodb-port
           containerPort: 3306
+#env: This specifies the environment variables to be set in the container, including the MySQL root password.
         env:
          - name: MYSQL_ROOT_PASSWORD
+#valueFrom: This specifies that the value of the environment variable should come from a Kubernetes secret.
            valueFrom:
              secretKeyRef:
                name: app-secret
                key: db-pass
+#nodeSelector: This specifies the node selector that should be used to select the node to run the pod on.
       nodeSelector:
         failure-domain.beta.kubernetes.io/zone: ap-south-1a
+#volumes: This specifies the volumes that should be used by the pod.
       volumes:
         - name: vpro-db-data
           # This AWS EBS volume must already exist.
+#awsElasticBlockStore: This specifies that an existing AWS EBS volume should be used, including the volume ID and the file system type.
           awsElasticBlockStore:
              volumeID: vol-059889f229fd4dd28
              fsType: ext4
