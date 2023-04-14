@@ -32,9 +32,10 @@ spec:
                name: app-secret
                key: db-pass
       nodeSelector:
-        zone: ap-south-1a
+        failure-domain.beta.kubernetes.io/zone: ap-south-1a
       volumes:
         - name: vpro-db-data
-        awsElasticBlockStore:
-        volumeID: vol-059889f229fd4dd28
-        fsType: ext4
+          # This AWS EBS volume must already exist.
+          awsElasticBlockStore:
+             volumeID: vol-059889f229fd4dd28
+             fsType: ext4
