@@ -14,7 +14,7 @@ spec:
       labels:
         app: vprodb
     spec:
-      containers:
+      container:
       - name: vprodb
         image: vprofile/vprofiledb:V1
         args:
@@ -23,7 +23,7 @@ spec:
         - mountPath: /var/lib/mysql
           name: vpro-db-data
         ports:
-         - name: vprodb-port
+        - name: vprodb-port
           containerPort: 3306
         env:
          - name: MYSQL_ROOT_PASSWORD
